@@ -1,25 +1,31 @@
-const Joi = require("joi");
+import Joi from "joi";
 
-const createContactSchema = Joi.object({
-  name: Joi.string().required(),
-  email: Joi.string().required(),
-  phone: Joi.string()
-    .pattern(/^\(\d{3}\) \d{3}-\d{4}$/)
-    .required(),
+export const createContactSchema = Joi.object({
+  name: Joi.string()
+    .required()
+    .messages({ "any.required": "Missing required name field" }),
+
+  email: Joi.string()
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+    .required()
+    .messages({ "any.required": "Missing required email field" }),
+
+  phone: Joi.string().required().messages({
+    "any.required": "Missing required phone field",
+  }),
+
+  favorite: Joi.boolean(),
 });
 
-const updateContactSchema = Joi.object({
+export const updateContactSchema = Joi.object({
   name: Joi.string(),
   email: Joi.string(),
-  phone: Joi.string().pattern(/^\(\d{3}\) \d{3}-\d{4}$/),
+  phone: Joi.string(),
+  favorite: Joi.boolean(),
 });
 
-const updateStatusSchema = Joi.object({
-  favorite: Joi.boolean().required(),
+export const updateFavoriteSchema = Joi.object({
+  favorite: Joi.boolean()
+    .required()
+    .messages({ "any.required": "missing field favorite" }),
 });
-
-module.exports = {
-  createContactSchema,
-  updateContactSchema,
-  updateStatusSchema,
-};

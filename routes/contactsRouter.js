@@ -7,26 +7,34 @@ import {
   updateContactById,
   updateFavorite,
 } from "../controllers/contactsControllers.js";
-import validateBody from "../helpers/validateBody.js";
+
 import {
   createContactSchema,
   updateContactSchema,
   updateFavoriteSchema,
 } from "../schemas/contactsSchemas.js";
-import { isValidId } from "../helpers/isValid.js";
 
-const contactsRouter = express.Router();
+import { isValidId, validateBody } from "../helpers/index.js";
+import { authenticate } from "../middlewares/authMiddleware.js";
 
-contactsRouter.get("/", getAllContacts);
+export const contactsRouter = express.Router();
 
-contactsRouter.get("/:id", isValidId, getOneContact);
+contactsRouter.get("/", authenticate, getAllContacts);
 
-contactsRouter.delete("/:id", isValidId, deleteContact);
+contactsRouter.get("/:id", authenticate, isValidId, getOneContact);
 
-contactsRouter.post("/", validateBody(createContactSchema), createContact);
+contactsRouter.delete("/:id", authenticate, isValidId, deleteContact);
+
+contactsRouter.post(
+  "/",
+  authenticate,
+  validateBody(createContactSchema),
+  createContact
+);
 
 contactsRouter.put(
   "/:id",
+  authenticate,
   isValidId,
   validateBody(updateContactSchema),
   updateContactById
@@ -37,5 +45,3 @@ contactsRouter.patch(
   validateBody(updateFavoriteSchema),
   updateFavorite
 );
-
-export default contactsRouter;

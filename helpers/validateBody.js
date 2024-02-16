@@ -1,5 +1,4 @@
 import { HttpError } from "./index.js";
-
 export const validateBody = (schema) => {
   const func = (req, _, next) => {
     const { error } = schema.validate(req.body);

@@ -7,6 +7,10 @@ export const registerSchema = Joi.object({
   subscription: Joi.string().valid(...subsList),
 });
 
+export const emailSchema = Joi.object({
+  email: Joi.string().required(),
+});
+
 export const loginSchema = Joi.object({
   email: Joi.string().required(),
   password: Joi.string().min(6).required(),
